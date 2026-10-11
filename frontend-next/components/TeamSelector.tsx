@@ -1,17 +1,21 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useState, useMemo } from "react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectLabel,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { Home, Plane } from "lucide-react";
+import { Home, Plane, Search } from "lucide-react";
 import { getTeamLogo } from "@/lib/teamLogos";
+import { UCL_CURRENT_SEASON_TEAMS } from "@/lib/domesticLeagues";
 
 interface Props {
   label: string;
@@ -20,6 +24,8 @@ interface Props {
   onChange: (team: string) => void;
   isLoading: boolean;
   side: "home" | "away";
+  disabledTeam?: string;
+  isUcl?: boolean;
 }
 
 export default memo(function TeamSelector({
@@ -29,9 +35,82 @@ export default memo(function TeamSelector({
   onChange,
   isLoading,
   side,
+  disabledTeam,
+  isUcl = false,
 }: Props) {
   const isHome = side === "home";
   const logoSrc = selected ? getTeamLogo(selected) : undefined;
+  const [searchFilter, setSearchFilter] = useState("");
+
+  // Filter and prioritize teams
+  const { seasonTeams, otherTeams, filteredList } = useMemo(() => {
+    const q = searchFilter.toLowerCase().trim();
+
+    if (!isUcl) {
+      const list = teams.filter((t) => !q || t.toLowerCase().includes(q));
+      return { seasonTeams: [], otherTeams: [], filteredList: list };
+    }
+
+    const currentSeasonSet = new Set(
+      UCL_CURRENT_SEASON_TEAMS.map((name) => name.toLowerCase())
+    );
+
+    const sTeams: string[] = [];
+    const oTeams: string[] = [];
+
+    // Prioritize 2024/25 UCL clubs at the top
+    for (const team of UCL_CURRENT_SEASON_TEAMS) {
+      if (teams.includes(team) && (!q || team.toLowerCase().includes(q))) {
+        sTeams.push(team);
+      }
+    }
+
+    // Historical & other clubs
+    for (const team of teams) {
+      if (!currentSeasonSet.has(team.toLowerCase()) && (!q || team.toLowerCase().includes(q))) {
+        oTeams.push(team);
+      }
+    }
+
+    return {
+      seasonTeams: sTeams,
+      otherTeams: oTeams,
+      filteredList: [...sTeams, ...oTeams],
+    };
+  }, [teams, searchFilter, isUcl]);
+
+  const renderTeamItem = (t: string) => {
+    const itemLogo = getTeamLogo(t);
+    const isDisabled = t === disabledTeam;
+
+    return (
+      <SelectItem
+        key={t}
+        value={t}
+        disabled={isDisabled}
+        className="cursor-pointer text-sm py-2 focus:bg-primary/10 focus:text-foreground rounded-lg disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        <div className="flex items-center justify-between w-full gap-2">
+          <div className="flex items-center gap-2.5 truncate min-w-0">
+            {itemLogo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={itemLogo} alt="" className="h-5 w-5 object-contain shrink-0" />
+            ) : (
+              <span className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-bold shrink-0 text-muted-foreground">
+                {t.charAt(0)}
+              </span>
+            )}
+            <span className="truncate font-medium">{t}</span>
+          </div>
+          {isDisabled && (
+            <span className="text-[0.6rem] text-muted-foreground/60 uppercase font-semibold shrink-0">
+              Opponent
+            </span>
+          )}
+        </div>
+      </SelectItem>
+    );
+  };
 
   return (
     <motion.div
@@ -51,6 +130,7 @@ export default memo(function TeamSelector({
             className="relative group flex items-center justify-center"
           >
             <div className={`absolute inset-0 rounded-full blur-lg opacity-40 transition-opacity ${isHome ? "bg-chart-1/30" : "bg-chart-2/30"}`} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={logoSrc}
               alt={`${selected} logo`}
@@ -91,6 +171,29 @@ export default memo(function TeamSelector({
         </span>
       </div>
 
+      {/* Search Filter for large team lists */}
+      {teams.length > 25 && (
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+          <Input
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            placeholder="Search teams..."
+            className="h-8 pl-8 text-xs bg-muted/40 border-border/60 rounded-lg placeholder:text-muted-foreground/60"
+          />
+          {searchFilter && (
+            <button
+              type="button"
+              onClick={() => setSearchFilter("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground hover:text-foreground px-1"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Team Dropdown */}
       <Select value={selected} onValueChange={onChange} disabled={isLoading}>
         <SelectTrigger
           className={`w-full h-11 text-sm bg-background/60 backdrop-blur-sm border transition-all hover:border-primary/40 focus:ring-2 ring-primary/20 rounded-xl ${
@@ -101,31 +204,35 @@ export default memo(function TeamSelector({
         >
           <SelectValue placeholder="Select a team" />
         </SelectTrigger>
-        <SelectContent className="max-h-72 rounded-xl">
-          {teams.map((t) => {
-            const itemLogo = getTeamLogo(t);
-            return (
-              <SelectItem
-                key={t}
-                value={t}
-                className="cursor-pointer text-sm py-2 focus:bg-primary/10 focus:text-foreground rounded-lg"
-              >
-                <div className="flex items-center gap-2.5">
-                  {itemLogo ? (
-                    <img src={itemLogo} alt="" className="h-5 w-5 object-contain shrink-0" />
-                  ) : (
-                    <span className="h-5 w-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-bold shrink-0 text-muted-foreground">
-                      {t.charAt(0)}
-                    </span>
-                  )}
-                  <span className="truncate font-medium">{t}</span>
-                </div>
-              </SelectItem>
-            );
-          })}
+        <SelectContent className="max-h-80 rounded-xl">
+          {filteredList.length === 0 ? (
+            <div className="p-3 text-center text-xs text-muted-foreground">
+              No matching teams found
+            </div>
+          ) : isUcl ? (
+            <>
+              {seasonTeams.length > 0 && (
+                <SelectGroup>
+                  <SelectLabel className="text-[0.62rem] font-extrabold uppercase tracking-widest text-primary px-2.5 py-1.5 bg-primary/10 rounded-md mx-1 my-1">
+                    🏆 2024/25 Champions League Teams ({seasonTeams.length})
+                  </SelectLabel>
+                  {seasonTeams.map(renderTeamItem)}
+                </SelectGroup>
+              )}
+              {otherTeams.length > 0 && (
+                <SelectGroup>
+                  <SelectLabel className="text-[0.62rem] font-bold uppercase tracking-widest text-muted-foreground/80 px-2.5 py-1.5 mt-2 mx-1 border-t border-border/40">
+                    Other UCL Clubs ({otherTeams.length})
+                  </SelectLabel>
+                  {otherTeams.map(renderTeamItem)}
+                </SelectGroup>
+              )}
+            </>
+          ) : (
+            filteredList.map(renderTeamItem)
+          )}
         </SelectContent>
       </Select>
     </motion.div>
   );
 });
-

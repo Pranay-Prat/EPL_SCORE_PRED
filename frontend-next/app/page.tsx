@@ -73,13 +73,13 @@ export default function Home() {
 
             {/* League Selection Switcher */}
             <div className="flex justify-center mb-8">
-              <div className="inline-flex p-1.5 rounded-2xl bg-muted/70 border border-border/80 shadow-inner gap-3">
+              <div className="inline-flex flex-wrap justify-center p-1.5 rounded-2xl bg-muted/70 border border-border/80 shadow-inner gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setLeague("epl")}
                   title="Premier League"
                   aria-label="Premier League"
-                  className={`flex items-center justify-center px-6 py-2.5 rounded-xl transition-all cursor-pointer ${
+                  className={`flex items-center justify-center px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl transition-all cursor-pointer ${
                     league === "epl"
                       ? "bg-background shadow-md border border-primary/30 scale-[1.04] ring-2 ring-primary/20"
                       : "opacity-60 hover:opacity-100 hover:bg-background/40"
@@ -89,13 +89,13 @@ export default function Home() {
                   <img
                     src="/epl_white.png"
                     alt="Premier League"
-                    className="h-8 sm:h-10 w-auto object-contain max-w-[130px] drop-shadow-md dark:block hidden"
+                    className="h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[130px] drop-shadow-md dark:block hidden"
                   />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/epl_league.png"
                     alt="Premier League"
-                    className="h-8 sm:h-10 w-auto object-contain max-w-[130px] drop-shadow-md dark:hidden block"
+                    className="h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[130px] drop-shadow-md dark:hidden block"
                   />
                 </button>
 
@@ -104,7 +104,7 @@ export default function Home() {
                   onClick={() => setLeague("laliga")}
                   title="La Liga"
                   aria-label="La Liga"
-                  className={`flex items-center justify-center px-6 py-2.5 rounded-xl transition-all cursor-pointer ${
+                  className={`flex items-center justify-center px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl transition-all cursor-pointer ${
                     league === "laliga"
                       ? "bg-background shadow-md border border-primary/30 scale-[1.04] ring-2 ring-primary/20"
                       : "opacity-60 hover:opacity-100 hover:bg-background/40"
@@ -114,13 +114,38 @@ export default function Home() {
                   <img
                     src="/laliga_white.png"
                     alt="La Liga"
-                    className="h-8 sm:h-10 w-auto object-contain max-w-[130px] drop-shadow-md dark:block hidden"
+                    className="h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[130px] drop-shadow-md dark:block hidden"
                   />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/laliga_league.png"
                     alt="La Liga"
-                    className="h-8 sm:h-10 w-auto object-contain max-w-[130px] drop-shadow-md dark:hidden block"
+                    className="h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[130px] drop-shadow-md dark:hidden block"
+                  />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setLeague("ucl")}
+                  title="UEFA Champions League"
+                  aria-label="UEFA Champions League"
+                  className={`flex items-center justify-center px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl transition-all cursor-pointer ${
+                    league === "ucl"
+                      ? "bg-background shadow-md border border-primary/30 scale-[1.04] ring-2 ring-primary/20"
+                      : "opacity-60 hover:opacity-100 hover:bg-background/40"
+                  }`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/ucl_white.png"
+                    alt="UEFA Champions League"
+                    className="h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[130px] drop-shadow-md dark:block hidden"
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/ucl_league.png"
+                    alt="UEFA Champions League"
+                    className="h-8 sm:h-10 w-auto object-contain max-w-[110px] sm:max-w-[130px] drop-shadow-md dark:hidden block"
                   />
                 </button>
               </div>
@@ -134,6 +159,8 @@ export default function Home() {
                 onChange={setHomeTeam}
                 isLoading={teamsLoading}
                 side="home"
+                disabledTeam={awayTeam}
+                isUcl={league === "ucl"}
               />
 
               <div className="flex flex-col items-center justify-center py-2 md:py-6">
@@ -149,6 +176,8 @@ export default function Home() {
                 onChange={setAwayTeam}
                 isLoading={teamsLoading}
                 side="away"
+                disabledTeam={homeTeam}
+                isUcl={league === "ucl"}
               />
             </div>
 
@@ -156,7 +185,7 @@ export default function Home() {
               <Button
                 size="lg"
                 onClick={predict}
-                disabled={loading || teamsLoading || !homeTeam || !awayTeam}
+                disabled={loading || teamsLoading || !homeTeam || !awayTeam || homeTeam === awayTeam}
                 className="w-full sm:w-auto px-10 sm:px-16 py-6 text-xs sm:text-sm tracking-[0.15em] uppercase font-black shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all bg-primary text-primary-foreground border-none cursor-pointer rounded-xl"
               >
                 {loading ? (

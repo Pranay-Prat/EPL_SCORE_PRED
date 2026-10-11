@@ -42,7 +42,7 @@ export default memo(function Scoreboard({ result, homeTeam, awayTeam }: Props) {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
-          className="flex justify-center mb-6"
+          className="flex flex-col items-center gap-2 mb-6"
         >
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
@@ -50,9 +50,25 @@ export default memo(function Scoreboard({ result, homeTeam, awayTeam }: Props) {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-chart-3" />
             </span>
             <span className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-foreground">
-              AI Projected Result
+              {result.competition || "AI Projected Result"}
             </span>
           </div>
+
+          {result.predicted_score && (
+            <motion.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/60 border border-border text-xs font-black tracking-widest shadow-xs"
+            >
+              <span className="text-[0.6rem] font-bold uppercase tracking-wider text-muted-foreground">
+                Most Likely Scoreline:
+              </span>
+              <span className="text-sm font-black text-primary">
+                {result.predicted_score}
+              </span>
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Main scoreboard — stacked on mobile, side-by-side on sm+ */}

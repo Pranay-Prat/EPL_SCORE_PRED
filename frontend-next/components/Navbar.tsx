@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Github } from "lucide-react";
 
@@ -9,7 +10,7 @@ export default memo(function Navbar() {
     <nav className="sticky top-0 z-50 w-full bg-background/85 backdrop-blur-xl border-b border-border/40 transition-all">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
         {/* Left: Logo + Brand */}
-        <a className="flex items-center gap-2.5 group" href="/">
+        <Link className="flex items-center gap-2.5 group" href="/">
           <div className="relative">
             <div className="h-9 w-9 sm:h-10 sm:w-10 flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20 p-1">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -36,9 +37,13 @@ export default memo(function Navbar() {
               <img src="/laliga_white.png" alt="La Liga" className="h-5 w-auto object-contain opacity-90 dark:block hidden" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/laliga_league.png" alt="La Liga" className="h-5 w-auto object-contain opacity-90 dark:hidden block" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/ucl_white.png" alt="Champions League" className="h-5 w-auto object-contain opacity-90 dark:block hidden" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/ucl_league.png" alt="Champions League" className="h-5 w-auto object-contain opacity-90 dark:hidden block" />
             </div>
           </div>
-        </a>
+        </Link>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">

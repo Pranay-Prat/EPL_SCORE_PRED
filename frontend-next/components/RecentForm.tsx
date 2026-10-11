@@ -58,19 +58,24 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
       transition={{ duration: 0.6, delay: 0.5 }}
       className="bg-card border border-border rounded-xl p-5 shadow-sm"
     >
-      <h3 className="text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">
-        Recent Form (Last 5 Games)
-      </h3>
+      <div className="flex flex-col items-center justify-center gap-1 mb-4">
+        <h3 className="text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          Recent Form (Last 5 Games)
+        </h3>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {/* Home team form */}
         <div className="space-y-2">
-          <div className="flex items-center justify-center gap-2 pb-1">
-            {homeLogo && (
-              <img src={homeLogo} alt="" className="h-5 w-5 object-contain" />
-            )}
-            <div className="text-xs font-bold uppercase tracking-wider text-chart-1 truncate">
-              {homeTeam}
+          <div className="flex flex-col items-center gap-1 pb-1">
+            <div className="flex items-center gap-2">
+              {homeLogo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={homeLogo} alt="" className="h-5 w-5 object-contain" />
+              )}
+              <div className="text-xs font-bold uppercase tracking-wider text-chart-1 truncate max-w-[200px]">
+                {homeTeam}
+              </div>
             </div>
           </div>
           <StatCard
@@ -91,12 +96,15 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
 
         {/* Away team form */}
         <div className="space-y-2">
-          <div className="flex items-center justify-center gap-2 pb-1">
-            {awayLogo && (
-              <img src={awayLogo} alt="" className="h-5 w-5 object-contain" />
-            )}
-            <div className="text-xs font-bold uppercase tracking-wider text-chart-2 truncate">
-              {awayTeam}
+          <div className="flex flex-col items-center gap-1 pb-1">
+            <div className="flex items-center gap-2">
+              {awayLogo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={awayLogo} alt="" className="h-5 w-5 object-contain" />
+              )}
+              <div className="text-xs font-bold uppercase tracking-wider text-chart-2 truncate max-w-[200px]">
+                {awayTeam}
+              </div>
             </div>
           </div>
           <StatCard
@@ -116,12 +124,9 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
         </div>
       </div>
 
-      {(home.is_fallback || away.is_fallback) && (
-        <p className="text-center text-[0.55rem] text-muted-foreground/50 mt-3 uppercase tracking-wider">
-          * Some form data uses season averages when recent matches are unavailable
-        </p>
-      )}
+      <p className="text-center text-[0.55rem] text-muted-foreground/50 mt-4 uppercase tracking-wider">
+        * Form metrics calculated across recent domestic fixtures
+      </p>
     </motion.div>
   );
 });
-

@@ -22,7 +22,7 @@ export default memo(function HeroHeader() {
         >
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-foreground text-xs font-semibold tracking-wide backdrop-blur-sm">
             <Trophy className="h-3.5 w-3.5 text-amber-500" />
-            <span>Premier League &amp; La Liga AI Predictor</span>
+            <span>Premier League, La Liga &amp; Champions League AI Predictor</span>
             <Sparkles className="h-3 w-3 text-primary animate-pulse" />
           </div>
         </motion.div>

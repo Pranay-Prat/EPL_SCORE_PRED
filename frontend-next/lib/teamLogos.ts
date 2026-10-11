@@ -1,6 +1,7 @@
 /**
  * Maps backend team names → logo filenames in /public/.
- * Supports both Premier League (EPL) and La Liga teams, with accent-insensitive fallback.
+ * Supports Premier League (EPL), La Liga, and UEFA Champions League (UCL) teams.
+ * Includes accent-insensitive and substring fallback.
  */
 
 const TEAM_LOGOS: Record<string, string> = {
@@ -19,6 +20,7 @@ const TEAM_LOGOS: Record<string, string> = {
   "Hull City": "/hull_city.png",
   "Ipswich Town": "/ipswich_town.png",
   "Leeds": "/leeds.png",
+  "Leeds United": "/leeds.png",
   "Liverpool": "/liverpool.png",
   "Man City": "/manchester_city.png",
   "Man Utd": "/manchester_united.png",
@@ -85,6 +87,102 @@ const TEAM_LOGOS: Record<string, string> = {
   "Valencia CF": "/valencia.png",
   "Villarreal": "/villarreal.png",
   "Villarreal CF": "/villarreal.png",
+
+  // --- UEFA Champions League (Europe) ---
+  // Germany
+  "Bayern Munich": "/bayern_munich.png",
+  "FC Bayern München": "/bayern_munich.png",
+  "Borussia Dortmund": "/borussia_dortmund.png",
+  "Bayer Leverkusen": "/bayer_leverkusen.png",
+  "RB Leipzig": "/rb_leipzig.png",
+  "Stuttgart": "/stuttgart.png",
+  "VfB Stuttgart": "/stuttgart.png",
+
+  // Italy
+  "Inter": "/inter_milan.png",
+  "Inter Milan": "/inter_milan.png",
+  "AC Milan": "/ac_milan.png",
+  "Juventus": "/juventus.png",
+  "Atalanta": "/atalanta.png",
+  "Bologna": "/bologna.png",
+  "Napoli": "/napoli.png",
+  "Roma": "/roma.png",
+  "AS Roma": "/roma.png",
+  "Lazio": "/lazio.png",
+  "Lazio Roma": "/lazio.png",
+
+  // France
+  "Paris SG": "/paris_sg.png",
+  "Paris Saint-Germain": "/paris_sg.png",
+  "PSG": "/paris_sg.png",
+  "Monaco": "/monaco.png",
+  "AS Monaco": "/monaco.png",
+  "Lille": "/lille.png",
+  "Stade Brestois": "/brest.png",
+  "Brest": "/brest.png",
+  "Olympique Marseille": "/marseille.png",
+  "Marseille": "/marseille.png",
+
+  // Portugal
+  "Sporting CP": "/sporting_cp.png",
+  "Benfica": "/benfica.png",
+  "Porto": "/porto.png",
+  "FC Porto": "/porto.png",
+
+  // Netherlands
+  "Feyenoord": "/feyenoord.png",
+  "PSV": "/psv.png",
+  "PSV Eindhoven": "/psv.png",
+  "Ajax": "/ajax.png",
+
+  // Scotland
+  "Celtic": "/celtic.png",
+  "Rangers": "/rangers.png",
+
+  // Belgium
+  "Club Brugge": "/club_brugge.png",
+  "Anderlecht": "/anderlecht.png",
+
+  // Austria
+  "Sturm Graz": "/sturm_graz.png",
+  "SK Sturm Graz": "/sturm_graz.png",
+  "Salzburg": "/salzburg.png",
+  "Red Bull Salzburg": "/salzburg.png",
+
+  // Switzerland
+  "Young Boys": "/young_boys.png",
+  "BSC Young Boys": "/young_boys.png",
+
+  // Czech Republic
+  "Sparta Prague": "/sparta_prague.png",
+  "Sparta Praha": "/sparta_prague.png",
+  "Slavia Praha": "/slavia_prague.png",
+  "Slavia Prague": "/slavia_prague.png",
+
+  // Croatia & Serbia
+  "Dinamo Zagreb": "/dinamo_zagreb.png",
+  "Red Star Belgrade": "/red_star_belgrade.png",
+
+  // Slovakia & Ukraine
+  "Slovan Bratislava": "/slovan_bratislava.png",
+  "Shakhtar Donetsk": "/shakhtar_donetsk.png",
+
+  // Turkey
+  "Galatasaray": "/galatasaray.png",
+  "Fenerbahce": "/fenerbahce.png",
+  "Fenerbahçe": "/fenerbahce.png",
+  "Besiktas": "/besiktas.png",
+  "Beşiktaş": "/besiktas.png",
+
+  // Norway
+  "Bodø/Glimt": "/bodo_glimt.png",
+  "Bodo/Glimt": "/bodo_glimt.png",
+  "Bodo Glimt": "/bodo_glimt.png",
+  "Bodø Glimt": "/bodo_glimt.png",
+  "Molde FK": "/molde.png",
+  "Molde": "/molde.png",
+  "Rosenborg BK": "/rosenborg.png",
+  "Rosenborg": "/rosenborg.png",
 };
 
 export function getTeamLogo(teamName: string): string | undefined {
@@ -109,6 +207,17 @@ export function getTeamLogo(teamName: string): string | undefined {
     }
   }
 
+  // Substring fallback
+  for (const [key, path] of Object.entries(TEAM_LOGOS)) {
+    const keyNormalized = key
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+    if (normalized.includes(keyNormalized) || keyNormalized.includes(normalized)) {
+      return path;
+    }
+  }
+
   return undefined;
 }
-
