@@ -868,5 +868,115 @@
       "goal_difference": -9,
       "points": 0
     }
+  ],
+  "fixtures": [
+    {
+      "homeTeam": "Fenerbahce",
+      "awayTeam": "Slavia Prague",
+      "homeGoals": 2,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Sabah FK",
+      "awayTeam": "Borussia Dortmund",
+      "homeGoals": 2,
+      "awayGoals": 0
+    },
+    {
+      "homeTeam": "AS Roma",
+      "awayTeam": "Slovan Bratislava",
+      "homeGoals": 2,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "FC Porto",
+      "awayTeam": "PSV Eindhoven",
+      "homeGoals": 2,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Liverpool",
+      "awayTeam": "Villarreal",
+      "homeGoals": 1,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Manchester City",
+      "awayTeam": "AEK Athens",
+      "homeGoals": 1,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Napoli",
+      "awayTeam": "Bodo/Glimt",
+      "homeGoals": 1,
+      "awayGoals": 0
+    },
+    {
+      "homeTeam": "Paris Saint-Germain",
+      "awayTeam": "Barcelona",
+      "homeGoals": 3,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "VfB Stuttgart",
+      "awayTeam": "Atlético Madrid",
+      "homeGoals": 3,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Como",
+      "awayTeam": "Manchester United",
+      "homeGoals": 2,
+      "awayGoals": 0
+    },
+    {
+      "homeTeam": "Lille",
+      "awayTeam": "Galatasaray",
+      "homeGoals": 2,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Aston Villa",
+      "awayTeam": "VIKING FK",
+      "homeGoals": 1,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Bayern Munich",
+      "awayTeam": "Arsenal",
+      "homeGoals": 2,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Club Brugge",
+      "awayTeam": "Lens",
+      "homeGoals": 3,
+      "awayGoals": 0
+    },
+    {
+      "homeTeam": "Internazionale",
+      "awayTeam": "Shakhtar Donetsk",
+      "homeGoals": 3,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Real Betis",
+      "awayTeam": "Feyenoord Rotterdam",
+      "homeGoals": 3,
+      "awayGoals": 0
+    },
+    {
+      "homeTeam": "Real Madrid",
+      "awayTeam": "RB Leipzig",
+      "homeGoals": 6,
+      "awayGoals": 1
+    },
+    {
+      "homeTeam": "Sporting CP",
+      "awayTeam": "LASK Linz",
+      "homeGoals": 1,
+      "awayGoals": 1
+    }
   ]
 }

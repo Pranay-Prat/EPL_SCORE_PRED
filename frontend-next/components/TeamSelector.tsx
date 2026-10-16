@@ -13,7 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { Home, Plane, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { getTeamLogo } from "@/lib/teamLogos";
 import { UCL_CURRENT_SEASON_TEAMS } from "@/lib/domesticLeagues";
 
@@ -159,16 +159,6 @@ export default memo(function TeamSelector({
         <Label className="text-[0.65rem] font-bold tracking-[0.12em] text-muted-foreground uppercase">
           {label}
         </Label>
-        <span
-          className={`inline-flex items-center gap-1 text-[0.55rem] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${
-            isHome
-              ? "bg-chart-1/10 text-chart-3 border-chart-1/20"
-              : "bg-chart-2/10 text-chart-2 border-chart-2/20"
-          }`}
-        >
-          {isHome ? <Home className="h-2.5 w-2.5" /> : <Plane className="h-2.5 w-2.5" />}
-          {isHome ? "Host" : "Away"}
-        </span>
       </div>
 
       {/* Search Filter for large team lists */}
@@ -214,7 +204,7 @@ export default memo(function TeamSelector({
               {seasonTeams.length > 0 && (
                 <SelectGroup>
                   <SelectLabel className="text-[0.62rem] font-extrabold uppercase tracking-widest text-primary px-2.5 py-1.5 bg-primary/10 rounded-md mx-1 my-1">
-                    🏆 2024/25 Champions League Teams ({seasonTeams.length})
+                    Featured clubs
                   </SelectLabel>
                   {seasonTeams.map(renderTeamItem)}
                 </SelectGroup>

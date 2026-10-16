@@ -18,7 +18,6 @@ import { motion, AnimatePresence } from "framer-motion";
 const Scoreboard = lazy(() => import("@/components/Scoreboard"));
 const ProbabilityBar = lazy(() => import("@/components/ProbabilityBar"));
 const PoissonHeatmap = lazy(() => import("@/components/PoissonHeatmap"));
-const InsightBanner = lazy(() => import("@/components/InsightBanner"));
 const WinProbabilityDonut = lazy(() => import("@/components/WinProbabilityDonut"));
 const XgComparisonBar = lazy(() => import("@/components/XgComparisonBar"));
 const GoalDistributionChart = lazy(() => import("@/components/GoalDistributionChart"));
@@ -69,7 +68,7 @@ export default function Home() {
         >
           <div className="p-5 sm:p-6">
             <h2 className="text-center text-[0.65rem] font-extrabold uppercase tracking-[0.25em] text-muted-foreground/80 mb-5">
-              Select Competition &amp; Teams
+              Build your match
             </h2>
 
             {/* League Selection Switcher */}
@@ -192,11 +191,11 @@ export default function Home() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Calculating Probabilities...
+                    Predicting...
                   </>
                 ) : (
                   <>
-                    Predict Fixture Result
+                    Predict match
                     <ArrowRight className="ml-2.5 h-4 w-4" />
                   </>
                 )}
@@ -222,8 +221,6 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {league === "ucl" && <UclStandings />}
 
         {/* Analytics Dashboard */}
         {result && (
@@ -268,36 +265,21 @@ export default function Home() {
                 />
               </div>
 
-              {/* Row 3: Probability Bar + Insight */}
-              <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-                <ProbabilityBar result={result} />
-                <InsightBanner
-                  homeWinProb={result.home_win_prob}
-                  awayWinProb={result.away_win_prob}
-                  homeTeam={homeTeam}
-                  awayTeam={awayTeam}
-                />
-              </div>
-
-              {/* Row 4: Recent Form */}
-              <RecentForm
-                result={result}
-                homeTeam={homeTeam}
-                awayTeam={awayTeam}
-              />
-
-              {/* Row 5: Heatmap + Goal Distribution */}
-              <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-                <PoissonHeatmap matrix={result.poisson_matrix} />
-                <GoalDistributionChart
-                  matrix={result.poisson_matrix}
-                  homeTeam={homeTeam}
-                  awayTeam={awayTeam}
-                />
-              </div>
+              <details className="group rounded-xl border border-border bg-card p-5">
+                <summary className="cursor-pointer text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground">Explore match details</summary>
+                <div className="mt-5 space-y-4">
+                  <ProbabilityBar result={result} />
+                  <RecentForm result={result} homeTeam={homeTeam} awayTeam={awayTeam} />
+                  <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+                    <PoissonHeatmap matrix={result.poisson_matrix} />
+                    <GoalDistributionChart matrix={result.poisson_matrix} homeTeam={homeTeam} awayTeam={awayTeam} />
+                  </div>
+                </div>
+              </details>
             </div>
           </Suspense>
         )}
+        {league === "ucl" && <UclStandings />}
       </main>
 
       <Footer />

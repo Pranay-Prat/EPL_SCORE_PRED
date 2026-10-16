@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowDown, ArrowUp, Minus, Trophy } from "lucide-react";
 import snapshot from "@/data/ucl-standings.json";
 import { getTeamLogo } from "@/lib/teamLogos";
+import UclFixtures from "@/components/UclFixtures";
 
 const columns = [
   ["played", "P", "Played"],
@@ -21,8 +22,8 @@ const capturedDate = new Intl.DateTimeFormat("en-GB", {
 }).format(new Date(snapshot.capturedAt));
 
 export default function UclStandings() {
-  const [view, setView] = useState<"current" | "predicted">("current");
-  const rows = snapshot[view];
+  const [view, setView] = useState<"fixtures" | "current" | "predicted">("fixtures");
+  const rows = view === "fixtures" ? [] : snapshot[view];
   const currentRanks = new Map(snapshot.current.map((row) => [row.team, row.rank]));
 
   return (
@@ -33,14 +34,14 @@ export default function UclStandings() {
             <p className="mb-2 flex items-center gap-2 text-[0.65rem] font-extrabold uppercase tracking-[0.2em] text-muted-foreground">
               <Trophy aria-hidden="true" className="h-3.5 w-3.5" /> UEFA Champions League
             </p>
-            <h2 id="ucl-standings-heading" className="text-xl font-bold sm:text-2xl">League phase standings</h2>
+            <h2 id="ucl-standings-heading" className="text-xl font-bold sm:text-2xl">{view === "fixtures" ? "Next matchweek" : "League phase"}</h2>
           </div>
-          <p className="rounded-full border border-border bg-muted/40 px-3 py-1.5 text-xs text-muted-foreground">
-            Snapshot · <time dateTime={snapshot.capturedAt}>{capturedDate}</time>
+          <p className="text-xs text-muted-foreground">
+            Saved <time dateTime={snapshot.capturedAt}>{capturedDate}</time>
           </p>
         </div>
         <div role="group" aria-label="Standings view" className="inline-flex flex-wrap gap-1 rounded-xl border border-border bg-muted/50 p-1">
-          {(["current", "predicted"] as const).map((option) => (
+          {(["fixtures", "current", "predicted"] as const).map((option) => (
             <button
               key={option}
               type="button"
@@ -48,18 +49,18 @@ export default function UclStandings() {
               onClick={() => setView(option)}
               className={`cursor-pointer rounded-lg px-4 py-2 text-xs font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${view === option ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-background hover:text-foreground"}`}
             >
-              {option === "current" ? "Current standings" : "Predicted standings"}
+              {option === "fixtures" ? "Matches" : option === "current" ? "Current standings" : "Predicted standings"}
             </button>
           ))}
         </div>
-        <p id="ucl-standings-description" className="text-sm text-muted-foreground">
-          {view === "current"
-            ? "Saved standings for this matchweek. Switch to predicted standings to see the projected table after the upcoming fixtures."
-            : "Projected standings after the upcoming fixture window. Arrows show position changes from the saved current table."}
+        <p id="ucl-standings-description" className="sr-only">
+          {view === "fixtures" ? "Predicted results for the backend's upcoming fixture window. Kickoff dates are not provided." : view === "current"
+            ? "Saved current standings."
+            : "Projected standings. Arrows show rank changes."}
         </p>
       </div>
 
-      {rows.length === 0 ? (
+      {view === "fixtures" ? <UclFixtures /> : rows.length === 0 ? (
         <p role="status" className="p-8 text-center text-sm text-muted-foreground">
           No {view === "predicted" ? "predicted" : "current"} standings were available when this snapshot was saved.
         </p>
@@ -116,7 +117,7 @@ export default function UclStandings() {
         </div>
       )}
       <p className="border-t border-border px-5 py-4 text-xs leading-relaxed text-muted-foreground sm:px-6">
-        Saved for this matchweek; updates when a new snapshot is published. Predictions are sorted by points, goal difference, then goals scored; full UEFA tiebreak rules are not applied.
+        {view === "fixtures" ? "Upcoming fixture window · Saved predictions" : "Ranked by points, goal difference, then goals scored. Full UEFA tiebreaks excluded."}
       </p>
     </section>
   );

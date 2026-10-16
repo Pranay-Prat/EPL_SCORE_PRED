@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { mkdir, rename, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import { buildFixtureResults } from "./ucl-fixture-results.mjs";
 
 const root = new URL("../", import.meta.url);
 const destination = new URL("data/ucl-standings.json", root);
@@ -21,7 +22,7 @@ if (!configuredUrl) throw new Error("Set UCL_API_ORIGIN or NEXT_PUBLIC_API_URL t
 const origin = configuredUrl.replace(/\/+$/, "").replace(/\/api$/, "");
 const numericFields = ["rank", "played", "won", "drawn", "lost", "goals_for", "goals_against", "goal_difference", "points"];
 
-async function loadStandings(path) {
+async function loadJson(path) {
   console.log(`Fetching ${path} once…`);
   const response = await fetch(`${origin}${path}`, { signal: AbortSignal.timeout(900_000) });
   const payload = await response.json();
@@ -29,6 +30,11 @@ async function loadStandings(path) {
     throw new Error(typeof payload.detail === "string" ? payload.detail : JSON.stringify(payload.detail ?? payload));
   }
   if (!Array.isArray(payload)) throw new Error(`${path}: expected an array of standings.`);
+  return payload;
+}
+
+async function loadStandings(path) {
+  const payload = await loadJson(path);
   return payload.map((row, index) => {
     if (!row || typeof row.team !== "string" || !row.team.trim()) {
       throw new Error(`${path}: invalid team in row ${index + 1}.`);
@@ -47,12 +53,14 @@ async function loadStandings(path) {
 try {
   const current = await loadStandings("/ucl/standings");
   const predicted = await loadStandings("/ucl/predicted_table");
-  const snapshot = { capturedAt: new Date().toISOString(), source: origin, current, predicted };
+  const upcoming = await loadJson("/ucl/get_fixtures");
+  const fixtures = buildFixtureResults(upcoming, current, predicted);
+  const snapshot = { capturedAt: new Date().toISOString(), source: origin, current, predicted, fixtures };
   await mkdir(new URL("data/", root), { recursive: true });
   const temporary = new URL("data/ucl-standings.json.tmp", root);
   await writeFile(temporary, `${JSON.stringify(snapshot, null, 2)}\n`);
   await rename(temporary, destination);
-  console.log(`Saved ${current.length} current and ${predicted.length} predicted rows to data/ucl-standings.json.`);
+  console.log(`Saved ${current.length} current rows, ${predicted.length} predicted rows and ${fixtures.length} fixture predictions to data/ucl-standings.json.`);
 } catch (error) {
   console.error(`UCL snapshot was not replaced: ${error.message}`);
   process.exitCode = 1;
