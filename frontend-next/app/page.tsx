@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import HeroHeader from "@/components/HeroHeader";
 import TeamSelector from "@/components/TeamSelector";
 import Footer from "@/components/Footer";
+import UclStandings from "@/components/UclStandings";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -221,6 +222,8 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {league === "ucl" && <UclStandings />}
 
         {/* Analytics Dashboard */}
         {result && (
