@@ -60,7 +60,7 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
     >
       <div className="flex flex-col items-center justify-center gap-1 mb-4">
         <h3 className="text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-          Recent Form (Last 5 Games)
+          Form used by the model
         </h3>
       </div>
 
@@ -125,7 +125,7 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
       </div>
 
       <p className="text-center text-[0.55rem] text-muted-foreground/50 mt-4 uppercase tracking-wider">
-        * Form metrics calculated across recent domestic fixtures
+        {result.domestic_form ? "Recent domestic form · Scoring inputs adjusted for league strength" : "Recent domestic fixtures · Goals per game"}
       </p>
     </motion.div>
   );

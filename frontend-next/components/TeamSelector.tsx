@@ -156,7 +156,7 @@ export default memo(function TeamSelector({
       </div>
 
       <div className="flex items-center justify-between gap-2">
-        <Label className="text-[0.65rem] font-bold tracking-[0.12em] text-muted-foreground uppercase">
+        <Label htmlFor={`${side}-team`} className="text-[0.65rem] font-bold tracking-[0.12em] text-muted-foreground uppercase">
           {label}
         </Label>
       </div>
@@ -166,6 +166,7 @@ export default memo(function TeamSelector({
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
           <Input
+            aria-label={`Search ${side} teams`}
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             placeholder="Search teams..."
@@ -174,6 +175,7 @@ export default memo(function TeamSelector({
           {searchFilter && (
             <button
               type="button"
+              aria-label={`Clear ${side} team search`}
               onClick={() => setSearchFilter("")}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground hover:text-foreground px-1"
             >
@@ -186,13 +188,14 @@ export default memo(function TeamSelector({
       {/* Team Dropdown */}
       <Select value={selected} onValueChange={onChange} disabled={isLoading}>
         <SelectTrigger
+          id={`${side}-team`}
           className={`w-full h-11 text-sm bg-background/60 backdrop-blur-sm border transition-all hover:border-primary/40 focus:ring-2 ring-primary/20 rounded-xl ${
             selected
               ? isHome ? "border-chart-1/40" : "border-chart-2/40"
               : ""
           }`}
         >
-          <SelectValue placeholder="Select a team" />
+          <SelectValue placeholder={isLoading ? "Loading teams…" : "Select a team"} />
         </SelectTrigger>
         <SelectContent className="max-h-80 rounded-xl">
           {filteredList.length === 0 ? (

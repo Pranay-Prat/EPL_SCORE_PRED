@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { buildFixtureResults } from "./ucl-fixture-results.mjs";
 
 const snapshot = JSON.parse(await readFile(new URL("../data/ucl-standings.json", import.meta.url), "utf8"));
-const fixtures = snapshot.fixtures.map((match) => ({ home_team_name: match.homeTeam, away_team_name: match.awayTeam }));
+const fixtures = snapshot.fixtures.map((match) => ({ home_team_name: match.homeTeam, away_team_name: match.awayTeam, kickoff_time: match.kickoffTime, gameweek: match.gameweek }));
 
 test("every saved fixture reproduces its score and points from the projected table", () => {
   assert.deepEqual(buildFixtureResults(fixtures, snapshot.current, snapshot.predicted), snapshot.fixtures);
@@ -28,3 +28,13 @@ test("contradictory goal and points changes are rejected", () => {
 test("an empty fixture window produces an empty match list", () => {
   assert.deepEqual(buildFixtureResults([], snapshot.current, snapshot.predicted), []);
 });
+
+for (const league of ["epl", "laliga"]) {
+  test(`${league} saved scores match its projected table and preserve kickoff metadata`, async () => {
+    const saved = JSON.parse(await readFile(new URL(`../data/${league}-standings.json`, import.meta.url), "utf8"));
+    const matches = saved.fixtures.map((match) => ({ home_team_name: match.homeTeam, away_team_name: match.awayTeam, kickoff_time: match.kickoffTime, gameweek: match.gameweek }));
+    assert.deepEqual(buildFixtureResults(matches, saved.current, saved.predicted), saved.fixtures);
+    assert.equal(saved.current.length, 20);
+    assert.equal(saved.predicted.reduce((sum, row) => sum + row.played, 0) - saved.current.reduce((sum, row) => sum + row.played, 0), saved.fixtures.length * 2);
+  });
+}

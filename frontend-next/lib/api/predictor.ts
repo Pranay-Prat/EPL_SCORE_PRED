@@ -1,7 +1,7 @@
 import type { League, PredictionResult, UCLDomesticForm } from "@/types/prediction";
-import { resolveModelTeam } from "@/lib/domesticLeagues";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ?? "";
+const API_ORIGIN = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "").replace(/\/api$/, "");
+const API_BASE = `${API_ORIGIN}/api`;
 
 async function fetchJson<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const response = await fetch(input, {
@@ -37,6 +37,7 @@ async function fetchJson<T>(input: RequestInfo, init?: RequestInit): Promise<T> 
 }
 
 export async function fetchTeams(league: League = "epl"): Promise<string[]> {
+  if (league === "laliga") return (await fetchDomesticTeams("spain")).teams;
   return fetchJson<string[]>(`${API_BASE}/${league}/teams`);
 }
 
@@ -78,15 +79,12 @@ export async function fetchPrediction(
   const isUcl = league === "ucl";
   const endpoint = isUcl ? `${API_BASE}/ucl/predict` : `${API_BASE}/${league}/predict`;
 
-  const resolvedHome = resolveModelTeam(home_team);
-  const resolvedAway = resolveModelTeam(away_team);
-
   const body = isUcl
     ? {
-        home_team: resolvedHome.modelTeam,
-        away_team: resolvedAway.modelTeam,
-        home_league: resolvedHome.league || home_league || "spain",
-        away_league: resolvedAway.league || away_league || "england",
+        home_team,
+        away_team,
+        home_league,
+        away_league,
       }
     : {
         home_team,

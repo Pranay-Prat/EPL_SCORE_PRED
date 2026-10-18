@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "snapshot:ucl": "node scripts/snapshot-ucl-standings.mjs"
+    "snapshot:ucl": "node scripts/snapshot-ucl-standings.mjs",
+    "snapshot:all": "node scripts/snapshot-standings.mjs"
   },
   "dependencies": {
     "@radix-ui/react-tooltip": "^1.2.8",

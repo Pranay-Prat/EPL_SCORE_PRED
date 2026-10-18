@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { League, PredictionResult } from "@/types/prediction";
 import { fetchTeams, fetchPrediction } from "@/lib/api/predictor";
-import { getDefaultDomesticLeague, UCL_PROXY_TEAMS } from "@/lib/domesticLeagues";
+import { getDefaultDomesticLeague } from "@/lib/domesticLeagues";
 
 export type { League };
 
 export function usePrediction() {
-  const [league, setLeague] = useState<League>("epl");
+  const [league, setLeagueState] = useState<League>("epl");
+  const requestId = useRef(0);
   const [teams, setTeams] = useState<string[]>([]);
   const [homeTeam, setHomeTeamState] = useState("");
   const [awayTeam, setAwayTeamState] = useState("");
@@ -19,9 +20,22 @@ export function usePrediction() {
   const [error, setError] = useState<string | null>(null);
   const [teamsLoading, setTeamsLoading] = useState(true);
 
+  const setLeague = useCallback((next: League) => {
+    if (next === league) return;
+    requestId.current += 1;
+    setLoading(false);
+    setResult(null);
+    setTeams([]);
+    setHomeTeamState("");
+    setAwayTeamState("");
+    setTeamsLoading(true);
+    setLeagueState(next);
+  }, [league]);
+
   // Set home team and intelligently update domestic league when in UCL mode
   const setHomeTeam = useCallback((team: string) => {
     setHomeTeamState(team);
+    setResult(null);
     if (league === "ucl" && team) {
       setHomeLeague(getDefaultDomesticLeague(team, "spain"));
     }
@@ -30,6 +44,7 @@ export function usePrediction() {
   // Set away team and intelligently update domestic league when in UCL mode
   const setAwayTeam = useCallback((team: string) => {
     setAwayTeamState(team);
+    setResult(null);
     if (league === "ucl" && team) {
       setAwayLeague(getDefaultDomesticLeague(team, "england"));
     }
@@ -37,17 +52,15 @@ export function usePrediction() {
 
   // Load team list on mount or league change
   useEffect(() => {
+    let active = true;
     setTeamsLoading(true);
     setError(null);
     setResult(null);
 
     fetchTeams(league)
       .then((list) => {
-        let teamList = list;
-        if (league === "ucl") {
-          const proxyNames = Object.keys(UCL_PROXY_TEAMS);
-          teamList = Array.from(new Set([...proxyNames, ...list]));
-        }
+        if (!active) return;
+        const teamList = list;
         setTeams(teamList);
         if (teamList.length >= 2) {
           if (league === "ucl") {
@@ -63,8 +76,9 @@ export function usePrediction() {
           }
         }
       })
-      .catch(() => setError("Could not load team list."))
-      .finally(() => setTeamsLoading(false));
+      .catch((error) => { if (active) setError(error instanceof Error ? error.message : "Could not load team list."); })
+      .finally(() => { if (active) setTeamsLoading(false); });
+    return () => { active = false; };
   }, [league]);
 
   const predict = useCallback(async () => {
@@ -77,6 +91,7 @@ export function usePrediction() {
     setLoading(true);
     setError(null);
     setResult(null);
+    const currentRequest = ++requestId.current;
 
     try {
       const data = await fetchPrediction(
@@ -86,11 +101,11 @@ export function usePrediction() {
         homeLeague,
         awayLeague
       );
-      setResult(data);
+      if (requestId.current === currentRequest) setResult(data);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Prediction failed.");
+      if (requestId.current === currentRequest) setError(e instanceof Error ? e.message : "Prediction failed.");
     } finally {
-      setLoading(false);
+      if (requestId.current === currentRequest) setLoading(false);
     }
   }, [homeTeam, awayTeam, league, homeLeague, awayLeague]);
 

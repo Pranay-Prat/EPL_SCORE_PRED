@@ -3,9 +3,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "EPL Predictor AI",
+  title: "Match Matrix — Football with foresight",
   description:
-    "EPL Match Predictor AI — XGBoost + Poisson prediction engine for Premier League fixtures",
+    "Matchweek predictions, fixtures and projected standings for the Premier League, La Liga and Champions League.",
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>",
   },
