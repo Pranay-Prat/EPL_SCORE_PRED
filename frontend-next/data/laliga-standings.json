@@ -1,6 +1,7 @@
 {
-  "capturedAt": "2026-10-18T20:34:14.943Z",
+  "capturedAt": "2026-10-19T08:47:09.720Z",
   "source": "https://mavnish604-epl-backend.hf.space",
+  "standingsSource": "https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings",
   "current": [
     {
       "team": "Barcelona",
@@ -27,8 +28,20 @@
       "points": 22
     },
     {
-      "team": "Real Betis",
+      "team": "Real Madrid",
       "rank": 3,
+      "played": 9,
+      "won": 7,
+      "drawn": 0,
+      "lost": 2,
+      "goals_for": 23,
+      "goals_against": 9,
+      "goal_difference": 14,
+      "points": 21
+    },
+    {
+      "team": "Real Betis",
+      "rank": 4,
       "played": 9,
       "won": 6,
       "drawn": 1,
@@ -37,18 +50,6 @@
       "goals_against": 14,
       "goal_difference": 2,
       "points": 19
-    },
-    {
-      "team": "Real Madrid",
-      "rank": 4,
-      "played": 8,
-      "won": 6,
-      "drawn": 0,
-      "lost": 2,
-      "goals_for": 19,
-      "goals_against": 8,
-      "goal_difference": 11,
-      "points": 18
     },
     {
       "team": "Real Sociedad",
@@ -65,13 +66,13 @@
     {
       "team": "Sevilla",
       "rank": 6,
-      "played": 8,
+      "played": 9,
       "won": 4,
       "drawn": 2,
-      "lost": 2,
-      "goals_for": 13,
-      "goals_against": 12,
-      "goal_difference": 1,
+      "lost": 3,
+      "goals_for": 14,
+      "goals_against": 16,
+      "goal_difference": -2,
       "points": 14
     },
     {
@@ -269,8 +270,20 @@
       "points": 22
     },
     {
-      "team": "Real Betis",
+      "team": "Real Madrid",
       "rank": 3,
+      "played": 9,
+      "won": 7,
+      "drawn": 0,
+      "lost": 2,
+      "goals_for": 23,
+      "goals_against": 9,
+      "goal_difference": 14,
+      "points": 21
+    },
+    {
+      "team": "Real Betis",
+      "rank": 4,
       "played": 9,
       "won": 6,
       "drawn": 1,
@@ -279,18 +292,6 @@
       "goals_against": 14,
       "goal_difference": 2,
       "points": 19
-    },
-    {
-      "team": "Real Madrid",
-      "rank": 4,
-      "played": 8,
-      "won": 6,
-      "drawn": 0,
-      "lost": 2,
-      "goals_for": 19,
-      "goals_against": 8,
-      "goal_difference": 11,
-      "points": 18
     },
     {
       "team": "Real Sociedad",
@@ -307,13 +308,13 @@
     {
       "team": "Sevilla",
       "rank": 6,
-      "played": 8,
+      "played": 9,
       "won": 4,
       "drawn": 2,
-      "lost": 2,
-      "goals_for": 13,
-      "goals_against": 12,
-      "goal_difference": 1,
+      "lost": 3,
+      "goals_for": 14,
+      "goals_against": 16,
+      "goal_difference": -2,
       "points": 14
     },
     {

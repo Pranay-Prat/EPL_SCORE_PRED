@@ -13,5 +13,5 @@ export const competitions = {
 export const snapshots: Record<League, MatchweekSnapshot> = { epl, laliga, ucl };
 
 export function formatSnapshotDate(value: string) {
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(value));
+  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC", timeZoneName: "short" }).format(new Date(value));
 }

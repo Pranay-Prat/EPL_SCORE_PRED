@@ -13,12 +13,29 @@ export function usePrediction() {
   const [teams, setTeams] = useState<string[]>([]);
   const [homeTeam, setHomeTeamState] = useState("");
   const [awayTeam, setAwayTeamState] = useState("");
-  const [homeLeague, setHomeLeague] = useState<string>("spain");
-  const [awayLeague, setAwayLeague] = useState<string>("england");
+  const [homeLeague, setHomeLeagueState] = useState<string>("spain");
+  const [awayLeague, setAwayLeagueState] = useState<string>("england");
   const [result, setResult] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [teamsLoading, setTeamsLoading] = useState(true);
+
+  const clearPrediction = useCallback(() => {
+    requestId.current += 1;
+    setLoading(false);
+    setResult(null);
+    setError(null);
+  }, []);
+
+  const setHomeLeague = useCallback((next: string) => {
+    clearPrediction();
+    setHomeLeagueState(next);
+  }, [clearPrediction]);
+
+  const setAwayLeague = useCallback((next: string) => {
+    clearPrediction();
+    setAwayLeagueState(next);
+  }, [clearPrediction]);
 
   const setLeague = useCallback((next: League) => {
     if (next === league) return;
@@ -34,21 +51,21 @@ export function usePrediction() {
 
   // Set home team and intelligently update domestic league when in UCL mode
   const setHomeTeam = useCallback((team: string) => {
+    clearPrediction();
     setHomeTeamState(team);
-    setResult(null);
     if (league === "ucl" && team) {
-      setHomeLeague(getDefaultDomesticLeague(team, "spain"));
+      setHomeLeagueState(getDefaultDomesticLeague(team, "spain"));
     }
-  }, [league]);
+  }, [league, clearPrediction]);
 
   // Set away team and intelligently update domestic league when in UCL mode
   const setAwayTeam = useCallback((team: string) => {
+    clearPrediction();
     setAwayTeamState(team);
-    setResult(null);
     if (league === "ucl" && team) {
-      setAwayLeague(getDefaultDomesticLeague(team, "england"));
+      setAwayLeagueState(getDefaultDomesticLeague(team, "england"));
     }
-  }, [league]);
+  }, [league, clearPrediction]);
 
   // Load team list on mount or league change
   useEffect(() => {
@@ -68,8 +85,8 @@ export function usePrediction() {
             const defaultAway = teamList.includes("Manchester City") ? "Manchester City" : teamList[1];
             setHomeTeamState(defaultHome);
             setAwayTeamState(defaultAway);
-            setHomeLeague(getDefaultDomesticLeague(defaultHome, "spain"));
-            setAwayLeague(getDefaultDomesticLeague(defaultAway, "england"));
+            setHomeLeagueState(getDefaultDomesticLeague(defaultHome, "spain"));
+            setAwayLeagueState(getDefaultDomesticLeague(defaultAway, "england"));
           } else {
             setHomeTeamState(teamList[0]);
             setAwayTeamState(teamList[1]);

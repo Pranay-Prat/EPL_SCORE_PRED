@@ -1,3 +1,5 @@
+import uclSnapshot from "@/data/ucl-standings.json";
+
 export interface DomesticLeagueOption {
   label: string;
   value: string;
@@ -26,76 +28,25 @@ export const DOMESTIC_LEAGUES: DomesticLeagueOption[] = [
 
 export type DomesticLeague = (typeof DOMESTIC_LEAGUES)[number]["value"];
 
-/**
- * 2024/2025 UEFA Champions League 36 league-phase clubs.
- * These are pinned at the top of the selector for quick and intuitive selection.
- */
-export const UCL_CURRENT_SEASON_TEAMS = [
-  "Real Madrid",
-  "Manchester City",
-  "Bayern Munich",
-  "Arsenal",
-  "Barcelona",
-  "Liverpool",
-  "Paris SG",
-  "Inter",
-  "Borussia Dortmund",
-  "Bayer Leverkusen",
-  "Atletico Madrid",
-  "Atalanta",
-  "Juventus",
-  "AC Milan",
-  "Sporting CP",
-  "Benfica",
-  "RB Leipzig",
-  "Aston Villa",
-  "Monaco",
-  "Lille",
-  "Feyenoord",
-  "PSV",
-  "Stuttgart",
-  "Stade Brestois",
-  "Celtic",
-  "Bologna",
-  "Girona",
-  "Club Brugge",
-  "Sparta Prague",
-  "Dinamo Zagreb",
-  "Salzburg",
-  "Young Boys",
-  "Red Star Belgrade",
-  "Sturm Graz",
-  "Slovan Bratislava",
-  "Shakhtar Donetsk",
-  "Bodø/Glimt", // Mapped via proxy model team
-] as const;
-
-/**
- * Proxy mapping for teams this season that are missing from the model's training dataset.
- * For example, Bodø/Glimt can use a generic/historic Norwegian club (e.g. Rosenborg BK).
- */
-export const UCL_PROXY_TEAMS: Record<string, { modelTeam: string; league: DomesticLeague; note: string }> = {
-  "Bodø/Glimt": {
-    modelTeam: "Rosenborg BK",
-    league: "norway",
-    note: "Bodø/Glimt (simulated via Rosenborg BK)",
-  },
-  "Bodo/Glimt": {
-    modelTeam: "Rosenborg BK",
-    league: "norway",
-    note: "Bodø/Glimt (simulated via Rosenborg BK)",
-  },
+// These aliases name the same club in the provider and model vocabularies.
+const UCL_MODEL_NAMES: Record<string, string> = {
+  "Paris Saint-Germain": "Paris SG",
+  "Internazionale": "Inter",
+  "Atlético Madrid": "Atletico Madrid",
+  "VfB Stuttgart": "Stuttgart",
+  "Feyenoord Rotterdam": "Feyenoord",
+  "FC Porto": "Porto",
+  "AS Roma": "Roma",
+  "Lens": "RC Lens",
+  "Slavia Prague": "Slavia Praha",
+  "LASK Linz": "LASK",
+  "Sabah FK": "Sabah",
 };
 
-export function resolveModelTeam(displayTeam: string): { modelTeam: string; league?: DomesticLeague } {
-  if (UCL_PROXY_TEAMS[displayTeam]) {
-    return {
-      modelTeam: UCL_PROXY_TEAMS[displayTeam].modelTeam,
-      league: UCL_PROXY_TEAMS[displayTeam].league,
-    };
-  }
-  return { modelTeam: displayTeam };
-}
+// Follow the saved season's standings rather than pinning an old season's clubs.
+export const UCL_CURRENT_SEASON_TEAMS = uclSnapshot.current.map(
+  ({ team }) => UCL_MODEL_NAMES[team] ?? team
+);
 
 // Known club-to-domestic-league mapping for UCL clubs
 const CLUB_DOMESTIC_MAP: Record<string, DomesticLeague> = {
@@ -178,6 +129,8 @@ const CLUB_DOMESTIC_MAP: Record<string, DomesticLeague> = {
   "lazio": "italy",
   "lazio roma": "italy",
   "bologna": "italy",
+  "como": "italy",
+  "como 1907": "italy",
   "acf fiorentina": "italy",
   "torino": "italy",
   "udinese": "italy",
@@ -188,6 +141,7 @@ const CLUB_DOMESTIC_MAP: Record<string, DomesticLeague> = {
 
   // France
   "paris sg": "france",
+  "paris saint-germain": "france",
   "psg": "france",
   "monaco": "france",
   "lille": "france",
@@ -199,6 +153,7 @@ const CLUB_DOMESTIC_MAP: Record<string, DomesticLeague> = {
   "lyon": "france",
   "stade rennais": "france",
   "rc lens": "france",
+  "lens": "france",
   "racing club de lens": "france",
   "rc strasbourg": "france",
   "nice": "france",
@@ -253,6 +208,8 @@ const CLUB_DOMESTIC_MAP: Record<string, DomesticLeague> = {
   "rapid wien": "austria",
   "grazer ak": "austria",
   "fc tirol": "austria",
+  "lask": "austria",
+  "lask linz": "austria",
 
   // Czech Republic
   "sparta prague": "czech-republic",
@@ -284,6 +241,8 @@ const CLUB_DOMESTIC_MAP: Record<string, DomesticLeague> = {
   "neftchi pfc baku": "azerbaijan",
   "inter baku pik": "azerbaijan",
   "baku": "azerbaijan",
+  "sabah": "azerbaijan",
+  "sabah fk": "azerbaijan",
 
   // Greece
   "olympiacos": "greece",

@@ -23,6 +23,7 @@ export interface SavedFixture {
 export interface MatchweekSnapshot {
   capturedAt: string;
   source: string;
+  standingsSource?: string;
   current: Standing[];
   predicted: Standing[];
   fixtures: SavedFixture[];

@@ -50,6 +50,24 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
   const { home, away } = result.form;
   const homeLogo = getTeamLogo(homeTeam);
   const awayLogo = getTeamLogo(awayTeam);
+  const homeDomestic = result.domestic_form?.home;
+  const awayDomestic = result.domestic_form?.away;
+
+  function venueSummary(side: "home" | "away") {
+    const domestic = side === "home" ? homeDomestic : awayDomestic;
+    if (!result.domestic_form) return null;
+    const scored = side === "home" ? domestic?.home_scored : domestic?.away_scored;
+    const conceded = side === "home" ? domestic?.home_conceded : domestic?.away_conceded;
+    const matches = side === "home" ? domestic?.home_matches : domestic?.away_matches;
+    return (
+      <div className="rounded-lg border border-border bg-muted/40 p-3 text-xs">
+        <p className="font-semibold">{domestic?.league_name ?? "Domestic form"} · {side === "home" ? "Home matches" : "Away matches"}</p>
+        {scored != null && conceded != null ? (
+          <p className="mt-1 leading-relaxed text-muted-foreground">{scored.toFixed(2)} scored · {conceded.toFixed(2)} conceded per match{matches != null ? ` across ${matches} ${matches === 1 ? "match" : "matches"}` : ""}.</p>
+        ) : <p className="mt-1 text-muted-foreground">Venue form is unavailable; fallback inputs are used.</p>}
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -60,7 +78,7 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
     >
       <div className="flex flex-col items-center justify-center gap-1 mb-4">
         <h3 className="text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-          Form used by the model
+          Behind the forecast
         </h3>
       </div>
 
@@ -78,15 +96,16 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
               </div>
             </div>
           </div>
+          {venueSummary("home")}
           <StatCard
-            label="Avg Scored"
+            label="Scoring input"
             value={home.scored.toFixed(2)}
             sub="goals per game"
             icon={<TrendingUp className="h-4 w-4 text-chart-1" />}
             delay={0.6}
           />
           <StatCard
-            label="Avg Conceded"
+            label="Conceding input"
             value={home.conceded.toFixed(2)}
             sub="goals per game"
             icon={<Shield className="h-4 w-4 text-chart-2" />}
@@ -107,15 +126,16 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
               </div>
             </div>
           </div>
+          {venueSummary("away")}
           <StatCard
-            label="Avg Scored"
+            label="Scoring input"
             value={away.scored.toFixed(2)}
             sub="goals per game"
             icon={<TrendingUp className="h-4 w-4 text-chart-1" />}
             delay={0.8}
           />
           <StatCard
-            label="Avg Conceded"
+            label="Conceding input"
             value={away.conceded.toFixed(2)}
             sub="goals per game"
             icon={<Shield className="h-4 w-4 text-chart-2" />}
@@ -124,8 +144,8 @@ export default memo(function RecentForm({ result, homeTeam, awayTeam }: Props) {
         </div>
       </div>
 
-      <p className="text-center text-[0.55rem] text-muted-foreground/50 mt-4 uppercase tracking-wider">
-        {result.domestic_form ? "Recent domestic form · Scoring inputs adjusted for league strength" : "Recent domestic fixtures · Goals per game"}
+      <p className="mt-4 text-center text-xs leading-relaxed text-muted-foreground">
+        {result.domestic_form ? "Venue form shows the recent match averages. Model inputs below it include the form adjustments used for this forecast." : "Recent domestic form, measured in goals per match."}
       </p>
     </motion.div>
   );

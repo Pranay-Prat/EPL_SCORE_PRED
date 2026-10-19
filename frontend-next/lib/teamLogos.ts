@@ -110,6 +110,8 @@ const TEAM_LOGOS: Record<string, string> = {
   "Juventus": "/juventus.png",
   "Atalanta": "/atalanta.png",
   "Bologna": "/bologna.png",
+  "Como": "/como.png",
+  "Como 1907": "/como.png",
   "Napoli": "/napoli.png",
   "Roma": "/roma.png",
   "AS Roma": "/roma.png",
@@ -123,6 +125,8 @@ const TEAM_LOGOS: Record<string, string> = {
   "Monaco": "/monaco.png",
   "AS Monaco": "/monaco.png",
   "Lille": "/lille.png",
+  "Lens": "/lens.png",
+  "RC Lens": "/lens.png",
   "Stade Brestois": "/brest.png",
   "Brest": "/brest.png",
   "Olympique Marseille": "/marseille.png",
@@ -153,6 +157,8 @@ const TEAM_LOGOS: Record<string, string> = {
   "SK Sturm Graz": "/sturm_graz.png",
   "Salzburg": "/salzburg.png",
   "Red Bull Salzburg": "/salzburg.png",
+  "LASK": "/lask_linz.svg",
+  "LASK Linz": "/lask_linz.svg",
 
   // Switzerland
   "Young Boys": "/young_boys.png",
@@ -172,6 +178,12 @@ const TEAM_LOGOS: Record<string, string> = {
   "Slovan Bratislava": "/slovan_bratislava.png",
   "Shakhtar Donetsk": "/shakhtar_donetsk.png",
 
+  // Greece & Azerbaijan
+  "AEK Athens": "/aek_athens.png",
+  "AEK": "/aek_athens.png",
+  "Sabah FK": "/sabah_fk.png",
+  "Sabah": "/sabah_fk.png",
+
   // Turkey
   "Galatasaray": "/galatasaray.png",
   "Fenerbahce": "/fenerbahce.png",
@@ -188,6 +200,8 @@ const TEAM_LOGOS: Record<string, string> = {
   "Molde": "/molde.png",
   "Rosenborg BK": "/rosenborg.png",
   "Rosenborg": "/rosenborg.png",
+  "Viking FK": "/viking_fk.svg",
+  "Viking": "/viking_fk.svg",
 };
 
 export function getTeamLogo(teamName: string): string | undefined {

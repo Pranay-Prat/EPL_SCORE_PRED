@@ -5,6 +5,7 @@ const API_BASE = `${API_ORIGIN}/api`;
 
 async function fetchJson<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const response = await fetch(input, {
+    cache: "no-store",
     ...init,
     headers: {
       "Content-Type": "application/json",

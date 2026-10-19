@@ -58,7 +58,7 @@ export default memo(function TeamSelector({
     const sTeams: string[] = [];
     const oTeams: string[] = [];
 
-    // Prioritize 2024/25 UCL clubs at the top
+    // Prioritize the clubs in the saved season, using only accepted API names.
     for (const team of UCL_CURRENT_SEASON_TEAMS) {
       if (teams.includes(team) && (!q || team.toLowerCase().includes(q))) {
         sTeams.push(team);
@@ -207,7 +207,7 @@ export default memo(function TeamSelector({
               {seasonTeams.length > 0 && (
                 <SelectGroup>
                   <SelectLabel className="text-[0.62rem] font-extrabold uppercase tracking-widest text-primary px-2.5 py-1.5 bg-primary/10 rounded-md mx-1 my-1">
-                    Featured clubs
+                    Current league phase
                   </SelectLabel>
                   {seasonTeams.map(renderTeamItem)}
                 </SelectGroup>

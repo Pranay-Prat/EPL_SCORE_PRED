@@ -61,8 +61,18 @@ then rebuild and redeploy the frontend so visitors receive the new snapshot.
 No cron job is configured yet. Empty responses are saved and displayed as an
 empty state; request errors are printed with the backend's `detail` message.
 
+La Liga refreshes fetch current standings directly from ESPN because the backend's
+daily CSV can omit matches completed since its first request. The snapshot records
+this URL in `standingsSource`. Model scores are recovered against the backend's
+own current/predicted table pair, then applied to the fresh ESPN table. Fixtures
+whose kickoff has passed are excluded, so completed matches are not counted again.
+The refresh requires 20 valid provider rows, matching club lists, and valid kickoff
+times; a provider failure retains the existing snapshot instead of silently saving
+the stale backend table with a new timestamp. This still requires a refresh,
+rebuild, and deployment to update the published site.
+
 Run consistency and API-contract checks with:
 
 ```sh
-node --test scripts/ucl-fixture-results.test.mjs scripts/predictor-api.test.mjs
+node --test scripts/ucl-fixture-results.test.mjs scripts/predictor-api.test.mjs scripts/standings-data.test.mjs
 ```
